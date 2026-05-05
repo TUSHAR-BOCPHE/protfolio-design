@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tushar Bopche — Design Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbit&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+
+  <link rel="icon" href="assets/favicon.png" sizes="32x32">
+  <link rel="icon" href="assets/favicon.png" sizes="16x16">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black: #000;
+      --white: #fff;
+      --grey: #aeaeae;
+      --font-main: 'Orbit', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+
+      /* ── ICON COLORS — edit in the JS config block ── */
+      --icon-color: #000000;
+      --icon-color-hover: #000000;
+      --icon-opacity: 0.85;
+      --icon-opacity-hover: 1;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font-main);
+      overflow-x: hidden;
+    }
+
+    /* ─── PAGE ROUTING ─── */
+    .page {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    /* ════════ NAV ════════ */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100px;
+      padding: 16px 3px;
+      background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    nav.scrolled {
+      border-color: #eee;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      padding: 27px 35px;
+    }
+
+    /* Logo: image or text fallback */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      height: 34px;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-img {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .nav-logo-text {
+      font-family: var(--font-main);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .nav-link {
+      font-family: var(--font-main);
+      font-size: 15px;
+      color: var(--black);
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--black);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link:hover {
+      opacity: 0.65;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 27px 35px;
+    }
+
+    /* Icons — color via CSS vars */
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      color: var(--icon-color);
+      opacity: var(--icon-opacity);
+      transition: opacity 0.2s, color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .nav-icon:hover {
+      color: var(--icon-color-hover);
+      opacity: var(--icon-opacity-hover);
+      transform: scale(1.1);
+    }
+
+    .nav-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ════════ HERO ════════ */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 20px;
+      text-align: center;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+      max-width: 440px;
+    }
+
+    .hero-intro {
+      font-family: var(--font-main);
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .hero-sub {
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: var(--grey);
+      animation: fadeUp 1s 0.3s ease both;
+    }
+
+    .scroll-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--grey));
+    }
+
+    /* ════════ HOME GRID ════════ */
+    .projects-grid {
+      padding: 40px 70px 80px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .project-card {
+      position: relative;
+      aspect-ratio: 580 / 350;
+      background: #ffffff;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-card:hover .card-overlay {
+      opacity: 1;
+    }
+
+    .project-card:hover .card-media,
+    .project-card:hover .card-media-video {
+      transform: scale(1.04);
+    }
+
+    .project-card:nth-child(1) {
+      animation-delay: .05s
+    }
+
+    .project-card:nth-child(2) {
+      animation-delay: .10s
+    }
+
+    .project-card:nth-child(3) {
+      animation-delay: .15s
+    }
+
+    .project-card:nth-child(4) {
+      animation-delay: .20s
+    }
+
+    .project-card:nth-child(5) {
+      animation-delay: .25s
+    }
+
+    .project-card:nth-child(6) {
+      animation-delay: .30s
+    }
+
+    .project-card:nth-child(7) {
+      animation-delay: .35s
+    }
+
+    .card-media,
+    .card-media-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .card-placeholder {
+      width: 100%;
+      height: 100%;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-placeholder-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #333;
+      letter-spacing: 2px;
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card-title {
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .card-cat {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .6);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+    }
+
+    /* ════════ FOOTER ════════ */
+    footer {
+      background: var(--white);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 30px;
+      min-height: 120px;
+      margin-top: auto;
+    }
+
+    footer p {
+      font-family: var(--font-main);
+      font-size: 13px;
+      text-align: center;
+    }
+
+
+    /* ════════ MY CUSTOM LAYOUT ════════ */
+    .layout-Project02 {
+      grid-template-columns: repeat(2, 1fr) !important;
+      /* how many columns */
+      grid-auto-rows: auto;
+      /* row height in px  */
+      align-items: stretch;
+    }
+
+    .layout-Project02 .show-item {
+      aspect-ratio: unset !important;
+      height: 100%;
+    }
+
+    /* Which cells span how many columns */
+    .layout-Project02 .show-item:nth-child(1) {
+      grid-column: span 1;
+    }
+
+    /* wide 2*/
+    .layout-Project02 .show-item:nth-child(2) {
+      grid-column: span 1;
+    }
+
+    /* tall */
+    .layout-Project02 .show-item:nth-child(3) {
+      grid-column: span 2;
+    }
+
+    /* tall */
+    .layout-Project02 .show-item:nth-child(4) {
+      grid-column: span 1;
+    }
+
+    /* tall */
+    .layout-Project02 .show-item:nth-child(5) {
+      grid-column: span 1;
+    }
+
+    /* wide */
+    .layout-Project02 .show-item:nth-child(6) {
+      grid-column: span 1;
+    }
+
+    /* wide */
+    .layout-Project02 .show-item:nth-child(7) {
+      grid-column: span 1;
+    }
+
+    /* wide */
+    /* add more nth-child rules as needed */
+
+    /* Strip frame classes so they don't fight your layout */
+    .layout-Project02 .frame-portrait,
+    .layout-Project02 .frame-landscape,
+    .layout-Project02 .frame-square,
+    .layout-Project02 .frame-wide {
+      aspect-ratio: unset;
+    }
+
+
+
+    .layout-Project03 {
+      grid-template-columns: repeat(1, 1fr) !important;
+      /* how many columns */
+      grid-auto-rows: auto;
+      /* row height in px  */
+      align-items: stretch;
+    }
+
+    .layout-Project03 .show-item {
+      aspect-ratio: unset !important;
+      height: 100%;
+    }
+
+    /* Which cells span how many columns */
+    .layout-Project03 .show-item:nth-child(1) {
+      grid-column: span 1;
+    }
+
+    /* wide 2*/
+    .layout-Project03 .show-item:nth-child(2) {
+      grid-column: span 1;
+    }
+
+    /* tall 1*/
+    .layout-Project03 .show-item:nth-child(3) {
+      grid-column: span 1;
+    }
+
+    /* tall 1*/
+    .layout-Project03 .show-item:nth-child(4) {
+      grid-column: span 1;
+    }
+
+    /* tall 1*/
+    .layout-Project03 .show-item:nth-child(5) {
+      grid-column: span 1;
+    }
+
+    /* wide 2*/
+    /* add more nth-child rules as needed */
+
+    /* Strip frame classes so they don't fight your layout */
+    .layout-Project03 .frame-portrait,
+    .layout-Project03 .frame-landscape,
+    .layout-Project03 .frame-square,
+    .layout-Project03 .frame-wide {
+      aspect-ratio: unset;
+    }
+
+
+    .layout-Project04 {
+      grid-template-columns: repeat(3, 1fr) !important;
+      /* how many columns */
+      grid-auto-rows: auto;
+      /* row height in px  */
+      align-items: stretch;
+    }
+
+    .layout-Project04 .show-item {
+      aspect-ratio: unset !important;
+      height: 100%;
+    }
+
+    /* Which cells span how many columns */
+    .layout-Project04 .show-item:nth-child(1) {
+      grid-column: span 1;
+    }
+
+    /* wide 2*/
+    .layout-Project04 .show-item:nth-child(2) {
+      grid-column: span 1;
+    }
+
+    /* tall 1*/
+    .layout-Project04 .show-item:nth-child(3) {
+      grid-column: span 1;
+    }
+
+    /* tall 1*/
+    .layout-Project04 .show-item:nth-child(4) {
+      grid-column: span 1;
+    }
+
+    /* tall 1*/
+    .layout-Project04 .show-item:nth-child(5) {
+      grid-column: span 1;
+    }
+
+    /* wide 2*/
+    /* add more nth-child rules as needed */
+
+    /* Strip frame classes so they don't fight your layout */
+    .layout-Project04 .frame-portrait,
+    .layout-Project04 .frame-landscape,
+    .layout-Project04 .frame-square,
+    .layout-Project04 .frame-wide {
+      aspect-ratio: unset;
+    }
+
+
+
+    .layout-Project05 {
+      grid-template-columns: repeat(1, 1fr) !important;
+      grid-auto-rows: auto;
+      align-items: stretch;
+
+      gap: 0 !important;
+      /* 🔥 only this project has no gap */
+    }
+
+
+
+
+
+    /* ════════════════════════════════════════
+       PROJECT PAGE — details section
+       Faithfully matches Figma node 335:30707:
+         • Back arrow alone on its own line (top-left)
+         • Title (36px) + subcat below it
+         • Details row: narrow left col (Client/Role) + wide right col (Goal)
+    ════════════════════════════════════════ */
+    .project-content {
+      padding: 30px 68px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    /* Back button — its own line, like Figma absolute top:0 left:0 */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      width: 24px;
+      height: 24px;
+      /* exact Figma size-[24px] */
+      cursor: pointer;
+      color: var(--black);
+      text-decoration: none;
+      margin-bottom: 38px;
+      /* gap before title, mirrors top:74px offset */
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-3px);
+    }
+
+    .back-btn svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Heading: title + sub-category */
+    .proj-heading {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      margin-bottom: 34px;
+    }
+
+    .proj-title {
+      font-family: var(--font-main);
+      font-size: 36px;
+      line-height: 1.1;
+      letter-spacing: 1px;
+    }
+
+    .proj-subcat {
+      font-family: var(--font-main);
+      font-size: 10px;
+      color: var(--black);
+    }
+
+    /*
+      Details row — mirrors Figma "details" frame (h:83px):
+        left col  (absolute left:0,   w:77px):  Client (top:0) + Role (top:51px)
+        right col (absolute left:296px, w:599px): Goal label + text
+      We scale the proportional gap with flex + a fixed left-col width.
+    */
+    .proj-details {
+      display: flex;
+      align-items: flex-start;
+      gap: 150px;
+    }
+
+    /* Left column — narrow, matches Figma's ~77px proportionally */
+    .proj-meta-col {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      /* ~51px Figma gap between client+role blocks */
+      width: 200px;
+      /* scaled generously from 77px Figma fixed */
+      flex-shrink: 0;
+    }
+
+    .proj-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .meta-label {
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: var(--black);
+    }
+
+    .meta-value {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--black);
+    }
+
+    /* Right column — goal, starts at ~296px in Figma */
+    .proj-goal-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      max-width: 850px;
+    }
+
+    .goal-label {
+      font-family: var(--font-main);
+      font-size: 14px;
+      color: var(--black);
+    }
+
+    .goal-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    /* ════════ PROJECT MEDIA GRID ════════ */
+    .project-show {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .show-item {
+      position: relative;
+      aspect-ratio: 419 / 524;
+      background: #0d0000;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .show-item:nth-child(1) {
+      animation-delay: .10s
+    }
+
+    .show-item:nth-child(2) {
+      animation-delay: .15s
+    }
+
+    .show-item:nth-child(3) {
+      animation-delay: .20s
+    }
+
+    .show-item:nth-child(4) {
+      animation-delay: .25s
+    }
+
+    .show-item:nth-child(5) {
+      animation-delay: .30s
+    }
+
+    .show-item:nth-child(6) {
+      animation-delay: .35s
+    }
+
+    .show-item:nth-child(7) {
+      animation-delay: .40s
+    }
+
+    .show-item:nth-child(8) {
+      animation-delay: .45s
+    }
+
+    .show-item:nth-child(9) {
+      animation-delay: .50s
+    }
+
+    .show-item:nth-child(10) {
+      animation-delay: .55s
+    }
+
+    .show-item:nth-child(11) {
+      animation-delay: .60s
+    }
+
+    .show-item:nth-child(12) {
+      animation-delay: .65s
+    }
+
+    .show-item {
+      aspect-ratio: auto;
+    }
+
+    .show-item img,
+    .show-item video {
+      width: 100%;
+      height: 100%;
+    }
+
+    /*.show-item:hover img, .show-item:hover video { transform: scale(1.04); }*/
+    .show-placeholder {
+      width: 100%;
+      height: 100%;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .show-placeholder-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #333;
+      letter-spacing: 2px;
+    }
+
+
+
+
+    /* ════════ ABOUT PAGE ════════ */
+    .page-about {
+      font-family: var(--font-main);
+    }
+
+    .about-hero {
+      display: flex;
+      min-height: 80vh;
+      border-bottom: 1.5px solid var(--grey);
+    }
+
+    .hero-left {
+      flex: 1;
+      padding: 120px 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 40px;
+    }
+
+    .bio-text {
+      font-family: var(--font-main);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .red {
+      color: #b53600;
+    }
+
+    .skills-heading {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .skills-list {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.8;
+      font-weight: semi-bold;
+      letter-spacing: 1.5px;
+      word-spacing: 2.5px;
+    }
+
+    .hero-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+    }
+
+    .bio-text,
+    .skills-wrap {}
+
+    .hero-photo {
+      width: 100%;
+      height: 550px;
+      max-width: 500px;
+      object-fit: cover;
+    }
+
+    .details-section {
+      padding: 60px 70px;
+      border-bottom: 1.5px solid var(--grey);
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 30px;
+    }
+
+    .info-label {
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding-bottom: 80px;
+    }
+
+    .d-label {
+      font-size: 22px;
+    }
+
+    .exp-role {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: #000000;
+    }
+
+    .edu-block {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      gap: 6px;
+    }
+
+    .soft-block {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      gap: 6px;
+    }
+
+    .exp-block {
+      display: flex;
+      gap: 40px;
+      font-size: 13px;
+    }
+
+    .exp-col {
+      flex: 1;
+      /* each takes equal width */
+      min-width: 0;
+      /* prevents overflow issues */
+    }
+
+    .approach-section {
+      padding: 120px 20px;
+      text-align: center;
+      align-self: center;
+      gap: 30px;
+    }
+
+    .approach-title {
+      font-family: var(--font-main);
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .approach-body {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      max-width: 776px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .about-hero {
+        flex-direction: column;
+      }
+
+      .hero-left {
+        padding: 60px 20px;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+
+
+    /* ════════ CONTACT PAGE ════════ */
+
+    .contact-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 20px;
+      text-align: center;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .contact-info {
+      font-family: var(--font-main);
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .contact-tag {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #b53600;
+      margin-bottom: 28px;
+    }
+
+    .contact-heading {
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .contact-sub {
+      font-size: 14px;
+      color: var(--grey);
+      max-width: 460px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .contact-email,
+    .contact-phone {
+      font-size: 32px;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+
+    .contact-divider {
+      width: 40px;
+      height: 1px;
+      background: #ddd;
+      margin: 40px 0;
+    }
+
+    .contact-socials {
+      display: flex;
+      gap: 30px;
+    }
+
+    .social-link {
+      font-size: 13px;
+      text-decoration: none;
+      color: var(--black);
+      opacity: 0.7;
+    }
+
+    .social-link:hover {
+      opacity: 1;
+      color: #b53600;
+    }
+
+
+
+
+
+    /* ════════ KEYFRAMES ════════ */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(8px);
+      }
+    }
+
+    /* ════════ RESPONSIVE ════════ */
+    @media (max-width: 1100px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 40px 40px 60px;
+      }
+
+      .project-show {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-left {
+        gap: 20px;
+        padding: 16px 20px;
+      }
+
+      .nav-right {
+        padding: 16px 20px;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+        padding: 30px 20px 50px;
+      }
+
+      .project-content {
+        padding: 20px 20px 60px;
+      }
+
+      .proj-details {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .proj-meta-col {
+        width: 100%;
+        flex-direction: row;
+        gap: 40px;
+      }
+
+      .project-show {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero {
+        padding: 100px 20px;
+      }
+    }
+  </style>
+</head>
+<sec>
+
+  <!-- ══════════════════════════════
+     HOME PAGE
+══════════════════════════════ -->
+  <div id="page-home" class="page active">
+
+    <nav id="nav-home">
+      <div class="nav-left">
+        <span class="nav-logo" onclick="navigate('home')" id="logo-home"></span>
+        <a class="nav-link" onclick="navigate('home')">Work</a>
+        <a class="nav-link" onclick="navigate('about')">About</a>
+        <a class="nav-link" #">Web</a>
+        <a class="nav-link" onclick="navigate('contact')">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-icon" href="assets/Tushar_Bopche_Resume.pdf" target="_blank" rel="noopener noreferrer" download
+          title="Download CV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 15V3m0 12l-4-4m4 4l4-4" />
+            <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.instagram.com/_tushaarr03?igsh=MXd4N2ViNzR5bmFxbg==" target="_blank"
+          rel="noopener noreferrer" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.linkedin.com/in/tushar-bopche-043197254" target="_blank"
+          rel="noopener noreferrer" title="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V9h4v1.5A6 6 0 0 1 16 8z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-text">
+        <p class="hero-intro">Hi, i'm Tushar Bopche. A Graphic Designer and Web Designer Based in Pune, India</p>
+        <p class="hero-sub">Scroll down to see my work!</p>
+        <div class="scroll-indicator">
+          <div class="scroll-arrow"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-grid" id="projects-grid"></section>
+
+    <footer>
+      <p>© 2025 Tushar DesignPortfolio</p>
+    </footer>
+
+  </div>
+
+
+  <!-- ══════════════════════════════
+     PROJECT PAGE
+══════════════════════════════ -->
+  <div id="page-project" class="page">
+
+    <nav id="nav-project">
+      <div class="nav-left">
+        <span class="nav-logo" onclick="navigate('home')" id="logo-project"></span>
+        <a class="nav-link" onclick="navigate('home')">Work</a>
+        <a class="nav-link" onclick="navigate('about')">About</a>
+        <a class="nav-link" #">Web</a>
+        <a class="nav-link" onclick="navigate('contact')">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-icon" href="assets/Tushar_Bopche_Resume.pdf" target="_blank" rel="noopener noreferrer" download
+          title="Download CV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 15V3m0 12l-4-4m4 4l4-4" />
+            <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.instagram.com/_tushaarr03?igsh=MXd4N2ViNzR5bmFxbg==" target="_blank"
+          rel="noopener noreferrer" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.linkedin.com/in/tushar-bopche-043197254" target="_blank"
+          rel="noopener noreferrer" title="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V9h4v1.5A6 6 0 0 1 16 8z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+      </div>
+    </nav>
+
+    <div class="project-content">
+
+      <div class="project-top">
+
+        <!-- Back arrow — standalone, top-left (matches Figma absolute top:0 left:0) -->
+        <a class="back-btn" onclick="navigate('home')" title="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </a>
+
+        <!-- Title block (Figma: heading, top:0 inside text group at top:74px) -->
+        <div class="proj-heading">
+          <h1 class="proj-title" id="proj-title">PROJECT NAME</h1>
+          <p class="proj-subcat" id="proj-category">Category</p>
+        </div>
+
+        <!-- Details row (Figma: details frame, top:114px relative to text group) -->
+        <div class="proj-details">
+
+          <!-- Left col: Client (top:0) then Role (top:51px) -->
+          <div class="proj-meta-col">
+            <div class="proj-meta-item">
+              <span class="meta-label">Client</span>
+              <span class="meta-value" id="proj-client">—</span>
+            </div>
+            <div class="proj-meta-item">
+              <span class="meta-label">Role</span>
+              <span class="meta-value" id="proj-role">—</span>
+            </div>
+          </div>
+
+          <!-- Right col: Goal (left:296px in Figma) -->
+          <div class="proj-goal-col">
+            <span class="goal-label">Goal</span>
+            <p class="goal-text" id="proj-goal">—</p>
+          </div>
+
+        </div>
+      </div><!-- /.project-top -->
+
+      <div class="project-show" id="project-show"></div>
+
+    </div>
+
+    <footer>
+      <p>© 2025 Tushar DesignPortfolio</p>
+    </footer>
+
+  </div>
+
+
+
+
+  <!-- ══════════════════════════════
+     ABOUT PAGE
+══════════════════════════════ -->
+  <div id="page-about" class="page">
+
+    <nav>
+      <div class="nav-left">
+        <span class="nav-logo" onclick="navigate('home')" id="logo-about"></span>
+        <a class="nav-link" onclick="navigate('home')">Work</a>
+        <a class="nav-link" onclick="navigate('about')">About</a>
+        <a class="nav-link" href="#">Web</a>
+        <a class="nav-link" onclick="navigate('contact')">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-icon" href="assets/Tushar_Bopche_Resume.pdf" target="_blank" rel="noopener noreferrer" download
+          title="Download CV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 15V3m0 12l-4-4m4 4l4-4" />
+            <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.instagram.com/_tushaarr03?igsh=MXd4N2ViNzR5bmFxbg==" target="_blank"
+          rel="noopener noreferrer" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.linkedin.com/in/tushar-bopche-043197254" target="_blank"
+          rel="noopener noreferrer" title="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V9h4v1.5A6 6 0 0 1 16 8z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="about-hero">
+
+      <div class="hero-left">
+        <div class="bio-text">
+          <br>I'm a graphic and web designer based in <span class="red" style="font-weight: bold;">India</span>, focused
+          on creating clean and impactful visual experiences. I specialize in <span style="font-weight: bold;">brand
+            identity</span>, <span style="font-weight: bold;">web design</span>, and <span
+            style="font-weight: bold;">digital content</span> for modern businesses.<br></br></p>
+
+          <br>My design journey began during <span style="font-weight: bold;">college</span>, where I started creating
+          <span style="font-weight: bold;">designs for events and campus activities</span>. What started as creative
+          exploration quickly grew into a deeper interest in visual communication.<br></br></p>
+
+          <p>I then expanded into <span style="font-weight: bold;">social media design</span>, working on posts and
+            campaigns that helped brands build their presence online. Over time, I moved into freelance work,
+            collaborating with local businesses on branding, packaging, and digital design projects.</p>
+        </div>
+
+        <div class="skills-wrap">
+          <div class="skills-heading"><span class="red">Skills</span></div>
+          <div class="skills-list">
+            Brand Identity<br>
+            Logo Design<br>
+            Social Media Visuals<br>
+            Web Design<br>
+            Packaging<br>
+            Posters<br>
+            Motion Graphics <span class="red">(Learning)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <img src="assets/about/photo.jpg" class="hero-photo" alt="">
+      </div>
+
+    </section>
+
+    <!-- DETAILS -->
+    <section class="details-section">
+
+      <div class="info-label"><span class="red" ,, style="font-size: 55px;">Info</span></div>
+
+      <div class="details-grid">
+
+        <div class="d-label"><span class="red">Education</span></div>
+        <div class="edu-block">
+          <div class="edu-year">2022–2025</div>
+          <div class="edu-degree" , style="font-weight: bold;">Bachelor of Computer Application</div>
+          <div class="edu-school">Bharati Vidyapeeth (IMED), Pune</div>
+          <div class="edu-grade">CGPA 8.1</div>
+        </div>
+
+        <div class="d-label"><span class="red">Softwares</span></div>
+        <div class="soft-block">
+          Figma<br>
+          Adobe Illustrator<br>
+          Adobe Photoshop<br>
+          Canva
+        </div>
+
+        <div class="d-label"><span class="red">Experience</span></div>
+        <div class="exp-block">
+
+          <div class="exp-col">
+            <div class="exp-header">
+              <p><span class="red">Feb – Mar 2026</span></p>
+              <p><span class="exp-role" , style="font-weight: bold;">Graphic Design Freelance</span></p>
+              <p><span class="exp-company">Away.in</span></p>
+            </div>
+            <div class="exp-desc">
+              Worked as a freelance graphic designer for Away.in, creating catalogues, banners, and marketing creatives
+              with a strong focus on layout, hierarchy, and brand consistency.
+            </div>
+          </div>
+
+          <div class="exp-col">
+            <div class="exp-header">
+              <p><span class="red">Jun – Dec 2025</span></p>
+              <p><span class="exp-role" , style="font-weight: bold;">Graphic Design Intern</span></p>
+              <p><span class="exp-company">Delta System</span></p>
+            </div>
+            <div class="exp-desc">
+              Created social media posts, logos, UI wireframes, and branding materials while coordinating with clients
+              to align design with business goals.
+            </div>
+          </div>
+
+          <div class="exp-col">
+            <div class="exp-header">
+              <p><span class="red">June – July 2024</span></p>
+              <p><span class="exp-role" , style="font-weight: bold;">UI/UX Intern</span></p>
+              <p><span class="exp-company">Impish</span></p>
+            </div>
+            <div class="exp-desc">
+              Designed wireframes and user flows focusing on usability, clarity, and interactive experience.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- APPROACH -->
+    <section class="approach-section">
+      <div class="approach-inner">
+        <p class="approach-title">Creative Approach</p>
+        <p class="approach-body">
+          I see design as a balance between creativity and logic. My process starts with understanding the story behind
+          a brand and translating it into visuals that connect with people. I focus on creating work that is simple,
+          meaningful, and impactful.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 Tushar DesignPortfolio</p>
+    </footer>
+
+  </div>
+
+
+
+
+  <!-- ══════════════════════════════
+     CONTACT PAGE
+══════════════════════════════ -->
+  <div id="page-contact" class="page">
+
+    <nav>
+      <div class="nav-left">
+        <span class="nav-logo" onclick="navigate('home')" id="logo-contact"></span>
+        <a class="nav-link" onclick="navigate('home')">Work</a>
+        <a class="nav-link" onclick="navigate('about')">About</a>
+        <a class="nav-link" href="#">Web</a>
+        <a class="nav-link" href="#">Contact</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-icon" href="assets/Tushar_Bopche_Resume.pdf" target="_blank" rel="noopener noreferrer" download
+          title="Download CV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 15V3m0 12l-4-4m4 4l4-4" />
+            <path d="M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.instagram.com/_tushaarr03?igsh=MXd4N2ViNzR5bmFxbg==" target="_blank"
+          rel="noopener noreferrer" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+        <a class="nav-icon" href="https://www.linkedin.com/in/tushar-bopche-043197254" target="_blank"
+          rel="noopener noreferrer" title="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V9h4v1.5A6 6 0 0 1 16 8z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+      </div>
+    </nav>
+
+    <section class="contact-main">
+
+      <span class="contact-tag">Get in touch</span>
+
+      <h1 class="contact-heading">Let's Work Together</h1>
+
+      <p class="contact-sub" , style="color: var(--black);">
+        <br>If You’re looking for a designer to create a clear and aesthetic visuals or
+        Website.</br><br><br><br><br><br>
+      </p>
+      <div class="contact-info">
+        <div class="contact-email">
+          <a class="contact-email">
+            tusharbopche126@gmail.com
+          </a>
+        </div>
+
+        <div class="contact-Phone">
+          <a class="contact-Phone" , style="font-size: 32px;">
+            +91 7038701052
+          </a>
+        </div>
+
+        <!-- <div class="contact-divider"></div> 
+
+    <div class="contact-socials">
+      <a class="social-link" href="#">
+        Instagram
+      </a>
+
+      <a class="social-link" href="#">
+        LinkedIn
+      </a>
+
+      <a class="social-link" href="#">
+        Download CV
+      </a>
+    </div>-->
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 Tushar DesignPortfolio</p>
+    </footer>
+
+  </div>
+  </section>
+
+
+
+
+  <script>
+    /* ══════════════════════════════════════════════════════
+       ██  CONFIGURATION  ██
+    
+       LOGO_SRC
+         Path to your logo image file. Supports .png .svg .jpg etc.
+         Example:  "assets/logo.png"
+         Leave ""  to use the default text "T."
+    
+       ICON_COLOR / ICON_COLOR_HOVER
+         Any CSS color value: "#333", "rgb(80,80,80)", "black", etc.
+    
+       PROJECTS
+         title, category, client, role, goal  — text shown on the project page
+         folder  — relative path to your asset folder (e.g. "assets/project01/")
+         files   — filenames inside that folder (images + videos both supported)
+                   Supported: .jpg .jpeg .png .gif .webp  /  .mp4 .webm .mov .ogg
+                   First file is used as the home-grid thumbnail.
+    ══════════════════════════════════════════════════════ */
+
+    const LOGO_SRC = "assets/logo.png";           // e.g. "assets/logo.png"
+    const ICON_COLOR = "#000000";    // icon default color
+    const ICON_COLOR_HOVER = "#000000";    // icon hover color
+
+    const PROJECTS = [
+      {
+        id: 1,
+        title: "B FARM ARGO",
+        category: "Social Media / Packaging",
+        client: "B Farm Argo",
+        role: "Graphic Designer",
+        goal: "Social media posts of a Brand BFA with a strong focus on visual consistency, clean composition. I incorporated high-quality visuals with thoughtful spacing, clear hierarchy, and minimal clutter to ensure readability and impact. The designs were tailored to highlight key content—whether promotional, informational, or aesthetic—while maintaining a modern, polished look optimized for digital platforms.",
+        folder: "assets/project01/",
+        cover: "cover.webp",
+        files: ["post01.webp", "post02.webp", "post03.webp", "post04.webp", "post05.webp", "post06.webp", "post07.webp", "post08.webp", "post09.webp", "post10.webp", "post11.webp", "post12.webp"]   // e.g. ["cover.jpg","post01.jpg","reel.mp4"]
+      },
+      { id: 2, title: "AWAY.in", layout: "layout-Project02", category: "Branding / Poster", client: "Away.in", role: "Graphic Designer", goal: "Created well-organized catalogue spreads that highlighted products with consistent typography, balanced spacing, and cohesive colour usage. Developed posters with bold compositions, impactful visuals, and attention-grabbing headlines, ensuring clarity and brand alignment across all designs.", cover: "cover.webp", folder: "assets/project02/", files: ["post01.webp", "post02.webp", "post03.webp", "post04.webp", "post05.webp", "post06.webp", "post07.webp",] },
+      { id: 3, title: "Zestra", layout: "layout-Project03", category: "brand Identity / Logo", client: "Self", role: "", goal: "Designed a premium beverage brand, ZESTRA, focused on cold-pressed, 100% natural juices. The project involved developing a complete brand identity system, including logo design, color palette, typography, and packaging. The visual direction was centered around minimalism, elegance, and a natural aesthetic to reflect the purity and quality of the product.", cover: "cover.webp", folder: "assets/project03/", files: ["post01.webp",] },
+      { id: 4, title: "Book Cover", layout: "layout-Project04", category: "Print / Illustration", client: "Self", role: "Graphic Designer", goal: "This project explores A collection of nine book covers designed to capture the soul of different stories through visuals. Each cover represents a unique narrative, ranging from fiction to educational themes, with carefully crafted typography, colour palettes, and layouts. The aim was to create visually engaging designs that not only attract attention but also communicate the essence of each story at a glance. The project focuses on hierarchy, composition, and conceptual thinking to bring each book to life.", cover: "cover.webp", folder: "assets/project04/", files: ["post01.webp", "post02.webp", "post03.webp", "post04.webp", "post05.webp", "post06.webp", "post07.webp", "post08.webp", "post09.webp",] },
+      { id: 5, title: "Bréwora", layout: "layout-Project05", category: "Brand Identity", client: "Self", role: "", goal: "The goal of this project is to create a cohesive and visually engaging brand identity for Brewora, a handcrafted café concept that goes beyond coffee to offer a complete lifestyle experience. The project focuses on developing a design system that reflects warmth, simplicity, and authenticity through the use of custom-made elements, earthy color palettes, and minimal aesthetics.", cover: "cover.webp", folder: "assets/project05/", files: ["post01.webp", "post02.webp", "post03.webp", "post04.webp", "post05.webp", "post06.webp", "post07.webp", "post08.webp", "post09.webp", "post10.webp", "post11.webp", "post12.webp", "post13.webp", "post14.webp", "post15.webp"] },
+      /*{ id:6, title:"PROJECT SIX",   category:"Social Media",         client:"Client Name", role:"Graphic Designer",  goal:"Project description goes here.", folder:"assets/project06/", files:[] },
+      { id:7, title:"PROJECT SEVEN", category:"Packaging",            client:"Client Name", role:"Graphic Designer",  goal:"Project description goes here.", folder:"assets/project07/", files:[] }*/
+    ];
+
+    /* ── Apply CSS vars from config ── */
+    function applyConfig() {
+      const r = document.documentElement.style;
+      r.setProperty('--icon-color', ICON_COLOR);
+      r.setProperty('--icon-color-hover', ICON_COLOR_HOVER);
+
+      // Render logo in both navbars
+      ['logo-home', 'logo-project', 'logo-about', 'logo-contact'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (LOGO_SRC) {
+          const img = document.createElement('img');
+          img.src = LOGO_SRC; img.alt = 'Logo'; img.className = 'nav-logo-img';
+          el.appendChild(img);
+        } else {
+          const t = document.createElement('span');
+          t.className = 'nav-logo-text'; t.textContent = 'T.';
+          el.appendChild(t);
+        }
+      });
+    }
+
+    /* ── Utils ── */
+    const VIDEO_EXT = ['mp4', 'webm', 'mov', 'ogg'];
+    const isVideo = f => VIDEO_EXT.includes(f.split('.').pop().toLowerCase());
+
+    function makeMediaEl(src, cls) {
+      if (isVideo(src)) {
+        const v = document.createElement('video');
+        Object.assign(v, { src, className: cls, autoplay: true, loop: true, muted: true, playsInline: true });
+        return v;
+      }
+      const img = document.createElement('img');
+      img.src = src;
+      img.loading = "lazy";
+      img.className = cls; img.alt = '';
+      return img;
+    }
+
+    /* ── Home grid ── */
+    function renderHome() {
+      const grid = document.getElementById('projects-grid');
+      grid.innerHTML = '';
+      PROJECTS.forEach((proj, i) => {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.style.animationDelay = `${0.05 + i * 0.07}s`;
+
+        if (proj.files.length) {
+          const t = proj.folder + proj.cover;
+          card.appendChild(makeMediaEl(t, isVideo(t) ? 'card-media-video' : 'card-media'));
+        } else {
+          const ph = document.createElement('div'); ph.className = 'card-placeholder';
+          const n = document.createElement('span'); n.className = 'card-placeholder-num';
+          n.textContent = String(i + 1).padStart(2, '0'); ph.appendChild(n); card.appendChild(ph);
+        }
+
+        const ov = document.createElement('div'); ov.className = 'card-overlay';
+        ov.innerHTML = `<div class="card-title">${proj.title}</div><div class="card-cat">${proj.category}</div>`;
+        card.appendChild(ov);
+        card.addEventListener('click', () => openProject(proj));
+        grid.appendChild(card);
+      });
+    }
+
+    /* ── Open project ── */
+    function openProject(proj) {
+      document.getElementById('proj-title').textContent = proj.title;
+      document.getElementById('proj-category').textContent = proj.category;
+      document.getElementById('proj-client').textContent = proj.client;
+      document.getElementById('proj-role').textContent = proj.role;
+      document.getElementById('proj-goal').textContent = proj.goal;
+
+      const show = document.getElementById('project-show');
+      show.innerHTML = '';
+
+      show.className = 'project-show';
+
+      // apply layout dynamically
+      if (proj.layout) {
+        show.classList.add(proj.layout);
+      }
+
+
+      if (proj.files.length) {
+        proj.files.forEach((f, i) => {
+          const item = document.createElement('div');
+          item.className = 'show-item'; item.style.animationDelay = `${0.05 + i * 0.06}s`;
+          item.appendChild(makeMediaEl(proj.folder + f, ''));
+          show.appendChild(item);
+        });
+      } else {
+        for (let i = 0; i < 12; i++) {
+          const item = document.createElement('div');
+          item.className = 'show-item'; item.style.animationDelay = `${0.05 + i * 0.06}s`;
+          const ph = document.createElement('div'); ph.className = 'show-placeholder';
+          const n = document.createElement('span'); n.className = 'show-placeholder-num';
+          n.textContent = String(i + 1).padStart(2, '0'); ph.appendChild(n); item.appendChild(ph); show.appendChild(item);
+        }
+      }
+      navigate('project');
+    }
+
+    /* ── Navigation ── */
+    function navigate(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function scrollToGrid() {
+      document.getElementById('projects-grid').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ── Scroll nav border ── */
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.page.active nav');
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    /* ── Boot ── */
+    applyConfig();
+    renderHome();
+  </script>
+  </body>
+
+</html>
